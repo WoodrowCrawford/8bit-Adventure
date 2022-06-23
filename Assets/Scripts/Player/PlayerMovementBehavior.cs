@@ -219,7 +219,9 @@ public class PlayerMovementBehavior : MonoBehaviour
 			if ((LastOnWallLeftTime > 0 && InputHandler.instance.MoveInput.x < 0) || (LastOnWallRightTime > 0 && InputHandler.instance.MoveInput.x > 0))
 			{
 				Slide();
+				
 			}
+		
 		}
 		#endregion
 	}
@@ -376,9 +378,14 @@ public class PlayerMovementBehavior : MonoBehaviour
 		LastOnGroundTime = 0;
 		LastPressedDashTime = 0;
 
+		//Plays the dash animation 
+		animator.SetBool("HasDashed", true);
+
 		SetGravityScale(0);
 
 		RB.velocity = dir.normalized * data.dashSpeed;
+
+		
 	}
 
 	private void StopDash(Vector2 dir)
@@ -392,6 +399,7 @@ public class PlayerMovementBehavior : MonoBehaviour
 			else
 				RB.AddForce(Vector2.down * RB.velocity.y * (1 - data.dashUpEndMult) * .7f, ForceMode2D.Impulse);
 		}
+		animator.SetBool("HasDashed", false);
 	}
 	#endregion
 

@@ -5,34 +5,22 @@ using UnityEngine.SceneManagement;
 
 public class SpikesBehavior : MonoBehaviour
 {
-    [SerializeField]
-    private Animator animator;
-
-    [SerializeField]
-    private float _respawnTimeAmount = 0;
+   public GameManager gameManager;
 
 
 
-    //The respawn timer
-    IEnumerator RespawnTime(float ResetTime)
+    private void Awake()
     {
-        _respawnTimeAmount = ResetTime;
-        yield return new WaitForSeconds(ResetTime);
-
+        gameManager = GetComponent<GameManager>();
     }
-    ///Get an on trigger for when the player touches the spikes
 
     private void OnTriggerEnter2D(Collider2D other)
     {
         if(other.gameObject.tag == "Player")
         {
-            //Play the death animation and disable controls
-
-            SceneManager.LoadScene("Level 1");
+            gameManager.Reset();
         }
 
-           
-        
     }
 
     //Play the animation for the death

@@ -1,10 +1,13 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class PlayerMovementBehavior : MonoBehaviour
 {
 	public Animator animator;
+
+
 
 	[SerializeField] private PlayerData data;
 
@@ -67,6 +70,7 @@ public class PlayerMovementBehavior : MonoBehaviour
 
 		SetGravityScale(data.gravityScale);
 		IsFacingRight = true;
+	
 	}
 
 	private void Update()
@@ -443,5 +447,21 @@ public class PlayerMovementBehavior : MonoBehaviour
 	{
 		return IsDashing && Time.time - _dashStartTime > data.dashAttackTime;
 	}
-	#endregion
+    #endregion
+
+    #region TRIGGER METHODS
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        if(collision.tag == "NextLevel")
+        {
+			SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);
+
+        }
+		else if(collision.tag == "PreviousLevel")
+        {
+			SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex - 1);
+
+		}
+    }
+    #endregion
 }

@@ -46,6 +46,15 @@ public partial class @PlayerInput : IInputActionCollection2, IDisposable
                     ""initialStateCheck"": false
                 },
                 {
+                    ""name"": ""OpenDoor"",
+                    ""type"": ""Button"",
+                    ""id"": ""d9555794-1069-4e18-8f8f-22c7ef1fe979"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": ""Press"",
+                    ""initialStateCheck"": false
+                },
+                {
                     ""name"": ""JumpUp"",
                     ""type"": ""Button"",
                     ""id"": ""95e41d0e-b409-496b-8247-3c4f52f1debe"",
@@ -315,6 +324,17 @@ public partial class @PlayerInput : IInputActionCollection2, IDisposable
                     ""action"": ""Climb"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""69a6bc86-7f2b-44a2-b50e-b54077ead32f"",
+                    ""path"": ""<Keyboard>/e"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""OpenDoor"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         },
@@ -353,6 +373,7 @@ public partial class @PlayerInput : IInputActionCollection2, IDisposable
         m_Player = asset.FindActionMap("Player", throwIfNotFound: true);
         m_Player_Movement = m_Player.FindAction("Movement", throwIfNotFound: true);
         m_Player_Jump = m_Player.FindAction("Jump", throwIfNotFound: true);
+        m_Player_OpenDoor = m_Player.FindAction("OpenDoor", throwIfNotFound: true);
         m_Player_JumpUp = m_Player.FindAction("JumpUp", throwIfNotFound: true);
         m_Player_Dash = m_Player.FindAction("Dash", throwIfNotFound: true);
         m_Player_Climb = m_Player.FindAction("Climb", throwIfNotFound: true);
@@ -420,6 +441,7 @@ public partial class @PlayerInput : IInputActionCollection2, IDisposable
     private IPlayerActions m_PlayerActionsCallbackInterface;
     private readonly InputAction m_Player_Movement;
     private readonly InputAction m_Player_Jump;
+    private readonly InputAction m_Player_OpenDoor;
     private readonly InputAction m_Player_JumpUp;
     private readonly InputAction m_Player_Dash;
     private readonly InputAction m_Player_Climb;
@@ -429,6 +451,7 @@ public partial class @PlayerInput : IInputActionCollection2, IDisposable
         public PlayerActions(@PlayerInput wrapper) { m_Wrapper = wrapper; }
         public InputAction @Movement => m_Wrapper.m_Player_Movement;
         public InputAction @Jump => m_Wrapper.m_Player_Jump;
+        public InputAction @OpenDoor => m_Wrapper.m_Player_OpenDoor;
         public InputAction @JumpUp => m_Wrapper.m_Player_JumpUp;
         public InputAction @Dash => m_Wrapper.m_Player_Dash;
         public InputAction @Climb => m_Wrapper.m_Player_Climb;
@@ -447,6 +470,9 @@ public partial class @PlayerInput : IInputActionCollection2, IDisposable
                 @Jump.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnJump;
                 @Jump.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnJump;
                 @Jump.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnJump;
+                @OpenDoor.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnOpenDoor;
+                @OpenDoor.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnOpenDoor;
+                @OpenDoor.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnOpenDoor;
                 @JumpUp.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnJumpUp;
                 @JumpUp.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnJumpUp;
                 @JumpUp.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnJumpUp;
@@ -466,6 +492,9 @@ public partial class @PlayerInput : IInputActionCollection2, IDisposable
                 @Jump.started += instance.OnJump;
                 @Jump.performed += instance.OnJump;
                 @Jump.canceled += instance.OnJump;
+                @OpenDoor.started += instance.OnOpenDoor;
+                @OpenDoor.performed += instance.OnOpenDoor;
+                @OpenDoor.canceled += instance.OnOpenDoor;
                 @JumpUp.started += instance.OnJumpUp;
                 @JumpUp.performed += instance.OnJumpUp;
                 @JumpUp.canceled += instance.OnJumpUp;
@@ -516,6 +545,7 @@ public partial class @PlayerInput : IInputActionCollection2, IDisposable
     {
         void OnMovement(InputAction.CallbackContext context);
         void OnJump(InputAction.CallbackContext context);
+        void OnOpenDoor(InputAction.CallbackContext context);
         void OnJumpUp(InputAction.CallbackContext context);
         void OnDash(InputAction.CallbackContext context);
         void OnClimb(InputAction.CallbackContext context);

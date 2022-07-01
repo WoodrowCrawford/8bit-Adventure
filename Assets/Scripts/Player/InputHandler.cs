@@ -9,6 +9,7 @@ public class InputHandler : MonoBehaviour
 	public static InputHandler instance;
 
 	private PlayerInput controls;
+	private GameObject currentTeleporter;
 
 	//Grabs the empty game object for the pause menu screen
 	public GameObject PauseMenu;
@@ -23,6 +24,7 @@ public class InputHandler : MonoBehaviour
 	public float ClimbInput { get; private set; }
 
 	public bool isPaused = false;
+	public bool hasOpenedDoor = false;
 
 	private void Awake()
 	{
@@ -51,10 +53,14 @@ public class InputHandler : MonoBehaviour
 		controls.Player.JumpUp.performed += ctx => OnJumpReleased(new InputArgs { context = ctx });
 		controls.Player.Dash.performed += ctx => OnDash(new InputArgs { context = ctx });
 
+		controls.Player.OpenDoor.performed += ctx => hasOpenedDoor = true;
+		controls.Player.OpenDoor.canceled += ctx => hasOpenedDoor = false;
+
 		controls.Player.Climb.performed += ctx => ClimbInput = ctx.ReadValue<float>();
         controls.Player.Climb.canceled += ctx => ClimbInput = 0;
 		controls.UI.Pause.performed += ctx => OnPause();
 
+		
         #endregion
     }
 
@@ -97,5 +103,39 @@ public class InputHandler : MonoBehaviour
 		}
 		
     }
+
+	// Update is called once per frame
+	void Update()
+	{
+		if (hasOpenedDoor == true)
+		{
+			if (currentTeleporter != null)
+			{
+				transform.position = currentTeleporter.GetComponent<TeleporterBehavior>().GetDestination().position;
+			}
+		}
+	}
+
+	private void OnTriggerEnter2D(Collider2D collision)
+	{
+		if (collision.CompareTag("Teleporter"))
+		{
+			currentTeleporter = collision.gameObject;
+		}
+	}
+
+	private void OnTriggerExit2D(Collider2D collision)
+	{
+		if (collision.CompareTag("Teleporter"))
+		{
+			if (collision.gameObject == currentTeleporter)
+			{
+				currentTeleporter = null;
+			}
+		}
+
+	}
+
 }
+
 

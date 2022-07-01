@@ -449,19 +449,5 @@ public class PlayerMovementBehavior : MonoBehaviour
 	}
     #endregion
 
-    #region TRIGGER METHODS
-    private void OnTriggerEnter2D(Collider2D collision)
-    {
-        if(collision.tag == "NextLevel")
-        {
-			SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);
-
-        }
-		else if(collision.tag == "PreviousLevel")
-        {
-			SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex - 1);
-
-		}
-    }
-    #endregion
+   
 }

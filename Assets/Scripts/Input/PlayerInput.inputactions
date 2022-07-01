@@ -24,6 +24,15 @@
                     "initialStateCheck": false
                 },
                 {
+                    "name": "OpenDoor",
+                    "type": "Button",
+                    "id": "d9555794-1069-4e18-8f8f-22c7ef1fe979",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "Press",
+                    "initialStateCheck": false
+                },
+                {
                     "name": "JumpUp",
                     "type": "Button",
                     "id": "95e41d0e-b409-496b-8247-3c4f52f1debe",
@@ -291,6 +300,17 @@
                     "processors": "",
                     "groups": "",
                     "action": "Climb",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "69a6bc86-7f2b-44a2-b50e-b54077ead32f",
+                    "path": "<Keyboard>/e",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "OpenDoor",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

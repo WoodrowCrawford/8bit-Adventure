@@ -8,6 +8,8 @@ public class InputHandler : MonoBehaviour
 {
 	public static InputHandler instance;
 
+	public Animator animator;
+
 	private PlayerInput controls;
 	private GameObject currentTeleporter;
 
@@ -52,6 +54,10 @@ public class InputHandler : MonoBehaviour
 		controls.Player.Jump.performed += ctx => OnJumpPressed(new InputArgs { context = ctx });
 		controls.Player.JumpUp.performed += ctx => OnJumpReleased(new InputArgs { context = ctx });
 		controls.Player.Dash.performed += ctx => OnDash(new InputArgs { context = ctx });
+
+		controls.Player.Attack.performed += ctx => Attack();
+		controls.Player.Attack.canceled += ctx => AttackEnd();
+
 
 		controls.Player.OpenDoor.performed += ctx => hasOpenedDoor = true;
 		controls.Player.OpenDoor.canceled += ctx => hasOpenedDoor = false;
@@ -116,7 +122,8 @@ public class InputHandler : MonoBehaviour
 		}
 	}
 
-	private void OnTriggerEnter2D(Collider2D collision)
+    #region TRIGGER TELEPORTER
+    private void OnTriggerEnter2D(Collider2D collision)
 	{
 		if (collision.CompareTag("Teleporter"))
 		{
@@ -135,7 +142,23 @@ public class InputHandler : MonoBehaviour
 		}
 
 	}
+    #endregion TRIGGER TELEPORTER
 
+
+    #region ATTACK FUNCTION
+	private void Attack()
+    {
+		animator.SetBool("HasAttacked", true);
+		
+	}
+
+
+	private void AttackEnd()
+    {
+		animator.SetBool("HasAttacked", false);
+
+	}
+    #endregion ATTACK FUNCTION
 }
 
 

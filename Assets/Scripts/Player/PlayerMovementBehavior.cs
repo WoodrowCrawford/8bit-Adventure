@@ -309,6 +309,8 @@ public class PlayerMovementBehavior : MonoBehaviour
 		movement = Mathf.Lerp(RB.velocity.x, movement, lerpAmount); // lerp so that we can prevent the Run from immediately slowing the player down, in some situations eg wall jump, dash 
 
 		RB.AddForce(movement * Vector2.right); // applies force force to rigidbody, multiplying by Vector2.right so that it only affects X axis 
+
+		//Sets the animation speed to match the movement
 		animator.SetFloat("Speed", Mathf.Abs(movement));
 
 		if (InputHandler.instance.MoveInput.x != 0)
@@ -335,6 +337,7 @@ public class PlayerMovementBehavior : MonoBehaviour
 		if (RB.velocity.y < 0)
 			force -= RB.velocity.y;
 
+		
 		RB.AddForce(Vector2.up * force, ForceMode2D.Impulse);
 		#endregion
 	}

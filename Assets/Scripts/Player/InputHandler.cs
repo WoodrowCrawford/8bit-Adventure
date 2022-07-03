@@ -13,8 +13,7 @@ public class InputHandler : MonoBehaviour
 	private PlayerInput controls;
 	private GameObject currentTeleporter;
 
-	//Grabs the empty game object for the pause menu screen
-	public GameObject PauseMenu;
+
 
 	[Header("Input Values")]
 	public Action<InputArgs> OnJumpPressed;
@@ -25,7 +24,6 @@ public class InputHandler : MonoBehaviour
 	public Vector2 MoveInput { get; private set; }
 	public float ClimbInput { get; private set; }
 
-	public bool isPaused = false;
 	public bool hasOpenedDoor = false;
 
 	private void Awake()
@@ -48,25 +46,29 @@ public class InputHandler : MonoBehaviour
 		controls = new PlayerInput();
 
 		#region Assign Inputs
+		//Player movement
 		controls.Player.Movement.performed += ctx => MoveInput = ctx.ReadValue<Vector2>();
 		controls.Player.Movement.canceled += ctx => MoveInput = Vector2.zero;
 
+		//Player Jump
 		controls.Player.Jump.performed += ctx => OnJumpPressed(new InputArgs { context = ctx });
 		controls.Player.JumpUp.performed += ctx => OnJumpReleased(new InputArgs { context = ctx });
+
+		//Player Dash
 		controls.Player.Dash.performed += ctx => OnDash(new InputArgs { context = ctx });
 
+		//Player Attack
 		controls.Player.Attack.performed += ctx => Attack();
 		controls.Player.Attack.canceled += ctx => AttackEnd();
 
-
+		//Player Open Door
 		controls.Player.OpenDoor.performed += ctx => hasOpenedDoor = true;
 		controls.Player.OpenDoor.canceled += ctx => hasOpenedDoor = false;
 
+		//Player Climb
 		controls.Player.Climb.performed += ctx => ClimbInput = ctx.ReadValue<float>();
         controls.Player.Climb.canceled += ctx => ClimbInput = 0;
-		controls.UI.Pause.performed += ctx => OnPause();
 
-		
         #endregion
     }
 
@@ -89,26 +91,7 @@ public class InputHandler : MonoBehaviour
 	}
 	#endregion
 
-	//Toggles the pause menu scren 
-	public void OnPause()
-    {
-
-		if(isPaused == false)
-        {
-			PauseMenu.SetActive(false);
-			isPaused = true;
-		
-			Time.timeScale = 1f;
-		}
-		else if(isPaused == true)
-        {
-			PauseMenu.SetActive(true);
-			isPaused = false;
-			Time.timeScale = 0.0000001f;
-			Debug.Log("Paused");
-		}
-		
-    }
+	
 
 	// Update is called once per frame
 	void Update()
@@ -142,11 +125,11 @@ public class InputHandler : MonoBehaviour
 		}
 
 	}
-    #endregion TRIGGER TELEPORTER
+    #endregion
 
 
     #region ATTACK FUNCTION
-	private void Attack()
+    private void Attack()
     {
 		animator.SetBool("HasAttacked", true);
 		
@@ -158,7 +141,7 @@ public class InputHandler : MonoBehaviour
 		animator.SetBool("HasAttacked", false);
 
 	}
-    #endregion ATTACK FUNCTION
+    #endregion
 }
 
 

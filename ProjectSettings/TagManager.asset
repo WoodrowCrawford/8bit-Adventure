@@ -8,6 +8,7 @@ TagManager:
   - NextLevel
   - PreviousLevel
   - Teleporter
+  - Interactable
   layers:
   - Default
   - TransparentFX

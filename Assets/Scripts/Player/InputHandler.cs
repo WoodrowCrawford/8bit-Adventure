@@ -25,6 +25,7 @@ public class InputHandler : MonoBehaviour
 	public float ClimbInput { get; private set; }
 
 	public bool hasOpenedDoor = false;
+	public bool GoToNextSentence = false;
 
 	private void Awake()
 	{
@@ -68,6 +69,11 @@ public class InputHandler : MonoBehaviour
 		//Player Climb
 		controls.Player.Climb.performed += ctx => ClimbInput = ctx.ReadValue<float>();
         controls.Player.Climb.canceled += ctx => ClimbInput = 0;
+
+
+		//Plays the next sentence
+		controls.Player.DialogueNext.performed += ctx => GoToNextSentence = true;
+		controls.Player.DialogueNext.canceled += ctx => GoToNextSentence = false;
 
         #endregion
     }
@@ -142,6 +148,9 @@ public class InputHandler : MonoBehaviour
 
 	}
     #endregion
+
+
+	
 }
 
 

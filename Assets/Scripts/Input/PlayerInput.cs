@@ -46,7 +46,7 @@ public partial class @PlayerInput : IInputActionCollection2, IDisposable
                     ""initialStateCheck"": false
                 },
                 {
-                    ""name"": ""Test"",
+                    ""name"": ""DialogueNext"",
                     ""type"": ""Button"",
                     ""id"": ""a62855dd-88a5-4a4d-a1fd-d4c6656ff666"",
                     ""expectedControlType"": ""Button"",
@@ -372,7 +372,7 @@ public partial class @PlayerInput : IInputActionCollection2, IDisposable
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
-                    ""action"": ""Test"",
+                    ""action"": ""DialogueNext"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 }
@@ -413,7 +413,7 @@ public partial class @PlayerInput : IInputActionCollection2, IDisposable
         m_Player = asset.FindActionMap("Player", throwIfNotFound: true);
         m_Player_Movement = m_Player.FindAction("Movement", throwIfNotFound: true);
         m_Player_Jump = m_Player.FindAction("Jump", throwIfNotFound: true);
-        m_Player_Test = m_Player.FindAction("Test", throwIfNotFound: true);
+        m_Player_DialogueNext = m_Player.FindAction("DialogueNext", throwIfNotFound: true);
         m_Player_Attack = m_Player.FindAction("Attack", throwIfNotFound: true);
         m_Player_OpenDoor = m_Player.FindAction("OpenDoor", throwIfNotFound: true);
         m_Player_JumpUp = m_Player.FindAction("JumpUp", throwIfNotFound: true);
@@ -483,7 +483,7 @@ public partial class @PlayerInput : IInputActionCollection2, IDisposable
     private IPlayerActions m_PlayerActionsCallbackInterface;
     private readonly InputAction m_Player_Movement;
     private readonly InputAction m_Player_Jump;
-    private readonly InputAction m_Player_Test;
+    private readonly InputAction m_Player_DialogueNext;
     private readonly InputAction m_Player_Attack;
     private readonly InputAction m_Player_OpenDoor;
     private readonly InputAction m_Player_JumpUp;
@@ -495,7 +495,7 @@ public partial class @PlayerInput : IInputActionCollection2, IDisposable
         public PlayerActions(@PlayerInput wrapper) { m_Wrapper = wrapper; }
         public InputAction @Movement => m_Wrapper.m_Player_Movement;
         public InputAction @Jump => m_Wrapper.m_Player_Jump;
-        public InputAction @Test => m_Wrapper.m_Player_Test;
+        public InputAction @DialogueNext => m_Wrapper.m_Player_DialogueNext;
         public InputAction @Attack => m_Wrapper.m_Player_Attack;
         public InputAction @OpenDoor => m_Wrapper.m_Player_OpenDoor;
         public InputAction @JumpUp => m_Wrapper.m_Player_JumpUp;
@@ -516,9 +516,9 @@ public partial class @PlayerInput : IInputActionCollection2, IDisposable
                 @Jump.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnJump;
                 @Jump.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnJump;
                 @Jump.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnJump;
-                @Test.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnTest;
-                @Test.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnTest;
-                @Test.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnTest;
+                @DialogueNext.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnDialogueNext;
+                @DialogueNext.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnDialogueNext;
+                @DialogueNext.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnDialogueNext;
                 @Attack.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnAttack;
                 @Attack.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnAttack;
                 @Attack.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnAttack;
@@ -544,9 +544,9 @@ public partial class @PlayerInput : IInputActionCollection2, IDisposable
                 @Jump.started += instance.OnJump;
                 @Jump.performed += instance.OnJump;
                 @Jump.canceled += instance.OnJump;
-                @Test.started += instance.OnTest;
-                @Test.performed += instance.OnTest;
-                @Test.canceled += instance.OnTest;
+                @DialogueNext.started += instance.OnDialogueNext;
+                @DialogueNext.performed += instance.OnDialogueNext;
+                @DialogueNext.canceled += instance.OnDialogueNext;
                 @Attack.started += instance.OnAttack;
                 @Attack.performed += instance.OnAttack;
                 @Attack.canceled += instance.OnAttack;
@@ -603,7 +603,7 @@ public partial class @PlayerInput : IInputActionCollection2, IDisposable
     {
         void OnMovement(InputAction.CallbackContext context);
         void OnJump(InputAction.CallbackContext context);
-        void OnTest(InputAction.CallbackContext context);
+        void OnDialogueNext(InputAction.CallbackContext context);
         void OnAttack(InputAction.CallbackContext context);
         void OnOpenDoor(InputAction.CallbackContext context);
         void OnJumpUp(InputAction.CallbackContext context);

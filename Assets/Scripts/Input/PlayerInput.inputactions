@@ -24,7 +24,7 @@
                     "initialStateCheck": false
                 },
                 {
-                    "name": "Test",
+                    "name": "DialogueNext",
                     "type": "Button",
                     "id": "a62855dd-88a5-4a4d-a1fd-d4c6656ff666",
                     "expectedControlType": "Button",
@@ -350,7 +350,7 @@
                     "interactions": "",
                     "processors": "",
                     "groups": "",
-                    "action": "Test",
+                    "action": "DialogueNext",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

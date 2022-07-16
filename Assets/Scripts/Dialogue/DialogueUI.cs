@@ -13,6 +13,7 @@ public class DialogueUI : MonoBehaviour
     [SerializeField]
     private DialogueObject testDialogue;
 
+    private ResponseHandler _responseHandler;
     private TypewriterEffect typewriterEffect;
 
     public InputHandler controls;
@@ -20,6 +21,7 @@ public class DialogueUI : MonoBehaviour
     private void Start()
     {
         typewriterEffect = GetComponent<TypewriterEffect>();
+        _responseHandler = GetComponent<ResponseHandler>();
         CloseDialogueBox();
         ShowDialogue(testDialogue);
     }
@@ -33,14 +35,27 @@ public class DialogueUI : MonoBehaviour
 
     private IEnumerator StepThroughDialogue(DialogueObject dialogueObject)
     {
-        foreach (string dialogue in dialogueObject.Dialogue)
+        for (int i = 0; i < dialogueObject.Dialogue.Length; i++)
         {
+            string dialogue = dialogueObject.Dialogue[i];
             yield return typewriterEffect.Run(dialogue, textLabel);
-            yield return new WaitUntil(() => controls.GetComponent<InputHandler>().GoToNextSentence == true);
 
+            if (i == dialogueObject.Dialogue.Length - 1 && dialogueObject.Responses != null && dialogueObject.HasResponses) break;
+
+            yield return new WaitUntil(() => controls.GetComponent<InputHandler>().GoToNextSentence == true);
         }
 
-        CloseDialogueBox();
+        if (dialogueObject.HasResponses)
+        {
+            _responseHandler.ShowResponses(dialogueObject.Responses);
+
+        }
+        else
+        {
+            CloseDialogueBox();
+        }
+
+ 
     }
 
     private void CloseDialogueBox()

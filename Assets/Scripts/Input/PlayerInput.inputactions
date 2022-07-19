@@ -33,15 +33,6 @@
                     "initialStateCheck": false
                 },
                 {
-                    "name": "Attack",
-                    "type": "Button",
-                    "id": "d59aa1c9-8b31-444a-926e-ec8a0043744f",
-                    "expectedControlType": "Button",
-                    "processors": "",
-                    "interactions": "Press",
-                    "initialStateCheck": false
-                },
-                {
                     "name": "OpenDoor",
                     "type": "Button",
                     "id": "d9555794-1069-4e18-8f8f-22c7ef1fe979",
@@ -334,19 +325,8 @@
                 },
                 {
                     "name": "",
-                    "id": "81bdfecc-8704-4694-bfb8-c3778007dbb2",
-                    "path": "<Mouse>/leftButton",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "",
-                    "action": "Attack",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
                     "id": "c859b9dc-5b30-44c8-b935-24cdf69ca4df",
-                    "path": "<Keyboard>/u",
+                    "path": "<Keyboard>/e",
                     "interactions": "",
                     "processors": "",
                     "groups": "",

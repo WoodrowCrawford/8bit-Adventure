@@ -2,14 +2,25 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.InputSystem;
 
 public class PlayerMovementBehavior : MonoBehaviour
 {
 	public Animator animator;
 
+	public IInteractable Interactable { get; set; }	
+
+	public DialogueUI DialogueUI => _dialogueUI;
 
 
-	[SerializeField] private PlayerData data;
+	[SerializeField]
+	private DialogueUI _dialogueUI;
+
+	[SerializeField] 
+	private PlayerData _data;
+
+	
+
 
 	#region COMPONENTS
 	public Rigidbody2D RB { get; private set; }
@@ -58,6 +69,7 @@ public class PlayerMovementBehavior : MonoBehaviour
 	private void Awake()
 	{
 		RB = GetComponent<Rigidbody2D>();
+	
 	}
 
 	private void Start()
@@ -68,15 +80,36 @@ public class PlayerMovementBehavior : MonoBehaviour
 		InputHandler.instance.OnDash += args => OnDash(args);
 		#endregion
 
-		SetGravityScale(data.gravityScale);
+		SetGravityScale(_data.gravityScale);
 		IsFacingRight = true;
 	
 	}
 
 	private void Update()
 	{
-		#region TIMERS
-		LastOnGroundTime -= Time.deltaTime;
+		//Stops player controls while the dialogue is open
+		//if(_dialogueUI.isOpen)
+  //      {
+		//  InputHandler.instance.enabled = false;
+  //      }
+		//else
+  //      {
+		//	InputHandler.instance.enabled = true;
+  //      }
+
+		#region INTERACT CHECK
+		if (Keyboard.current.eKey.IsPressed() && _dialogueUI.isOpen == false)
+        {
+			if (Interactable != null)
+            {
+				Interactable.Interact(this);
+            }
+        }
+        #endregion
+
+
+        #region TIMERS
+        LastOnGroundTime -= Time.deltaTime;
 		LastOnWallTime -= Time.deltaTime;
 		LastOnWallRightTime -= Time.deltaTime;
 		LastOnWallLeftTime -= Time.deltaTime;
@@ -95,17 +128,17 @@ public class PlayerMovementBehavior : MonoBehaviour
 		{
 			//Ground Check
 			if (Physics2D.OverlapBox(_groundCheckPoint.position, _groundCheckSize, 0, _groundLayer)) //checks if set box overlaps with ground
-				LastOnGroundTime = data.coyoteTime; //if so sets the lastGrounded to coyoteTime
+				LastOnGroundTime = _data.coyoteTime; //if so sets the lastGrounded to coyoteTime
 
 			//Right Wall Check
 			if ((Physics2D.OverlapBox(_frontWallCheckPoint.position, _wallCheckSize, 0, _groundLayer) && IsFacingRight)
 					|| (Physics2D.OverlapBox(_backWallCheckPoint.position, _wallCheckSize, 0, _groundLayer) && !IsFacingRight))
-				LastOnWallRightTime = data.coyoteTime;
+				LastOnWallRightTime = _data.coyoteTime;
 
 			//Right Wall Check
 			if ((Physics2D.OverlapBox(_frontWallCheckPoint.position, _wallCheckSize, 0, _groundLayer) && !IsFacingRight)
 				|| (Physics2D.OverlapBox(_backWallCheckPoint.position, _wallCheckSize, 0, _groundLayer) && IsFacingRight))
-				LastOnWallLeftTime = data.coyoteTime;
+				LastOnWallLeftTime = _data.coyoteTime;
 
 			//Two checks needed for both left and right walls since whenever the play turns the wall checkPoints swap sides
 			LastOnWallTime = Mathf.Max(LastOnWallLeftTime, LastOnWallRightTime);
@@ -116,11 +149,11 @@ public class PlayerMovementBehavior : MonoBehaviour
 		if (!IsDashing)
 		{
 			if (RB.velocity.y >= 0 || IsWallJumping)
-				SetGravityScale(data.gravityScale);
+				SetGravityScale(_data.gravityScale);
 			else if (InputHandler.instance.MoveInput.y < 0)
-				SetGravityScale(data.gravityScale * data.quickFallGravityMult);
+				SetGravityScale(_data.gravityScale * _data.quickFallGravityMult);
 			else
-				SetGravityScale(data.gravityScale * data.fallGravityMult);
+				SetGravityScale(_data.gravityScale * _data.fallGravityMult);
 		}
 		#endregion
 
@@ -131,7 +164,7 @@ public class PlayerMovementBehavior : MonoBehaviour
 			//Debug.Break();
 		}
 
-		if (IsWallJumping && Time.time - _wallJumpStartTime > data.wallJumpTime)
+		if (IsWallJumping && Time.time - _wallJumpStartTime > _data.wallJumpTime)
 			IsWallJumping = false;
 
 		if (!IsDashing)
@@ -165,7 +198,7 @@ public class PlayerMovementBehavior : MonoBehaviour
 				_dashAttacking = false;
 				StopDash(_lastDashDir); //begins stopping dash
 			}
-			else if (Time.time - _dashStartTime > data.dashAttackTime + data.dashEndTime)
+			else if (Time.time - _dashStartTime > _data.dashAttackTime + _data.dashEndTime)
 			{
 				IsDashing = false; //dash state over, returns to idle/run/inAir
 			}
@@ -189,30 +222,31 @@ public class PlayerMovementBehavior : MonoBehaviour
 			StartDash(_lastDashDir);
 		}
 		#endregion
+
 	}
 
 	private void FixedUpdate()
 	{
 		#region DRAG
 		if (IsDashing)
-			Drag(DashAttackOver() ? data.dragAmount : data.dashAttackDragAmount);
+			Drag(DashAttackOver() ? _data.dragAmount : _data.dashAttackDragAmount);
 		else if (LastOnGroundTime <= 0)
-			Drag(data.dragAmount);
+			Drag(_data.dragAmount);
 		else
-			Drag(data.frictionAmount);
+			Drag(_data.frictionAmount);
 		#endregion
 
 		#region RUN
 		if (!IsDashing)
 		{
 			if (IsWallJumping)
-				Run(data.wallJumpRunLerp);
+				Run(_data.wallJumpRunLerp);
 			else
 				Run(1);
 		}
 		else if (DashAttackOver())
 		{
-			Run(data.dashEndRunLerp);
+			Run(_data.dashEndRunLerp);
 			
 		}
 		#endregion
@@ -234,7 +268,7 @@ public class PlayerMovementBehavior : MonoBehaviour
 	//These functions are called when an even is triggered in my InputHandler. You could call these methods through a if(Input.GetKeyDown) in Update
 	public void OnJump(InputHandler.InputArgs args)
 	{
-		LastPressedJumpTime = data.jumpBufferTime;
+		LastPressedJumpTime = _data.jumpBufferTime;
 	}
 
 	public void OnJumpUp(InputHandler.InputArgs args)
@@ -245,7 +279,7 @@ public class PlayerMovementBehavior : MonoBehaviour
 
 	public void OnDash(InputHandler.InputArgs args)
 	{
-		LastPressedDashTime = data.dashBufferTime;
+		LastPressedDashTime = _data.dashBufferTime;
 	}
 	#endregion
 
@@ -269,7 +303,7 @@ public class PlayerMovementBehavior : MonoBehaviour
 
 	private void Run(float lerpAmount)
 	{
-		float targetSpeed = InputHandler.instance.MoveInput.x * data.runMaxSpeed; //calculate the direction we want to move in and our desired velocity
+		float targetSpeed = InputHandler.instance.MoveInput.x * _data.runMaxSpeed; //calculate the direction we want to move in and our desired velocity
 		float speedDif = targetSpeed - RB.velocity.x; //calculate difference between current velocity and desired velocity
 
 		#region Acceleration Rate
@@ -277,12 +311,12 @@ public class PlayerMovementBehavior : MonoBehaviour
 
 		//gets an acceleration value based on if we are accelerating (includes turning) or trying to decelerate (stop). As well as applying a multiplier if we're air borne
 		if (LastOnGroundTime > 0)
-			accelRate = (Mathf.Abs(targetSpeed) > 0.01f) ? data.runAccel : data.runDeccel;
+			accelRate = (Mathf.Abs(targetSpeed) > 0.01f) ? _data.runAccel : _data.runDeccel;
 		else
-			accelRate = (Mathf.Abs(targetSpeed) > 0.01f) ? data.runAccel * data.accelInAir : data.runDeccel * data.deccelInAir;
+			accelRate = (Mathf.Abs(targetSpeed) > 0.01f) ? _data.runAccel * _data.accelInAir : _data.runDeccel * _data.deccelInAir;
 
 		//if we want to run but are already going faster than max run speed
-		if (((RB.velocity.x > targetSpeed && targetSpeed > 0.01f) || (RB.velocity.x < targetSpeed && targetSpeed < -0.01f)) && data.doKeepRunMomentum)
+		if (((RB.velocity.x > targetSpeed && targetSpeed > 0.01f) || (RB.velocity.x < targetSpeed && targetSpeed < -0.01f)) && _data.doKeepRunMomentum)
 		{
 			accelRate = 0; //prevent any deceleration from happening, or in other words conserve are current momentum
 		}
@@ -292,15 +326,15 @@ public class PlayerMovementBehavior : MonoBehaviour
 		float velPower;
 		if (Mathf.Abs(targetSpeed) < 0.01f)
 		{
-			velPower = data.stopPower;
+			velPower = _data.stopPower;
 		}
 		else if (Mathf.Abs(RB.velocity.x) > 0 && (Mathf.Sign(targetSpeed) != Mathf.Sign(RB.velocity.x)))
 		{
-			velPower = data.turnPower;
+			velPower = _data.turnPower;
 		}
 		else
 		{
-			velPower = data.accelPower;
+			velPower = _data.accelPower;
 		}
 		#endregion
 
@@ -333,7 +367,7 @@ public class PlayerMovementBehavior : MonoBehaviour
 		LastOnGroundTime = 0;
 
 		#region Perform Jump
-		float force = data.jumpForce;
+		float force = _data.jumpForce;
 		if (RB.velocity.y < 0)
 			force -= RB.velocity.y;
 
@@ -351,7 +385,7 @@ public class PlayerMovementBehavior : MonoBehaviour
 		LastOnWallLeftTime = 0;
 
 		#region Perform Wall Jump
-		Vector2 force = new Vector2(data.wallJumpForce.x, data.wallJumpForce.y);
+		Vector2 force = new Vector2(_data.wallJumpForce.x, _data.wallJumpForce.y);
 		force.x *= dir; //apply force in opposite direction of wall
 
 		if (Mathf.Sign(RB.velocity.x) != Mathf.Sign(force.x))
@@ -367,7 +401,7 @@ public class PlayerMovementBehavior : MonoBehaviour
 	private void JumpCut()
 	{
 		//applies force downward when the jump button is released. Allowing the player to control jump height
-		RB.AddForce(Vector2.down * RB.velocity.y * (1 - data.jumpCutMultiplier), ForceMode2D.Impulse);
+		RB.AddForce(Vector2.down * RB.velocity.y * (1 - _data.jumpCutMultiplier), ForceMode2D.Impulse);
 	}
 
 	private void Slide()
@@ -376,7 +410,7 @@ public class PlayerMovementBehavior : MonoBehaviour
 		float targetSpeed = 0;
 		float speedDif = targetSpeed - RB.velocity.y;
 
-		float movement = Mathf.Pow(Mathf.Abs(speedDif) * data.slideAccel, data.slidePower) * Mathf.Sign(speedDif);
+		float movement = Mathf.Pow(Mathf.Abs(speedDif) * _data.slideAccel, _data.slidePower) * Mathf.Sign(speedDif);
 		RB.AddForce(movement * Vector2.up, ForceMode2D.Force);
 	}
 
@@ -390,21 +424,21 @@ public class PlayerMovementBehavior : MonoBehaviour
 
 		SetGravityScale(0);
 
-		RB.velocity = dir.normalized * data.dashSpeed;
+		RB.velocity = dir.normalized * _data.dashSpeed;
 
 		
 	}
 
 	private void StopDash(Vector2 dir)
 	{
-		SetGravityScale(data.gravityScale);
+		SetGravityScale(_data.gravityScale);
 
 		if (dir.y > 0)
 		{
 			if (dir.x == 0)
-				RB.AddForce(Vector2.down * RB.velocity.y * (1 - data.dashUpEndMult), ForceMode2D.Impulse);
+				RB.AddForce(Vector2.down * RB.velocity.y * (1 - _data.dashUpEndMult), ForceMode2D.Impulse);
 			else
-				RB.AddForce(Vector2.down * RB.velocity.y * (1 - data.dashUpEndMult) * .7f, ForceMode2D.Impulse);
+				RB.AddForce(Vector2.down * RB.velocity.y * (1 - _data.dashUpEndMult) * .7f, ForceMode2D.Impulse);
 		}
 		animator.SetBool("HasDashed", false);
 	}
@@ -440,17 +474,15 @@ public class PlayerMovementBehavior : MonoBehaviour
 
 	private bool CanDash()
 	{
-		if (_dashesLeft < data.dashAmount && LastOnGroundTime > 0)
-			_dashesLeft = data.dashAmount;
+		if (_dashesLeft < _data.dashAmount && LastOnGroundTime > 0)
+			_dashesLeft = _data.dashAmount;
 
 		return _dashesLeft > 0;
 	}
 
 	private bool DashAttackOver()
 	{
-		return IsDashing && Time.time - _dashStartTime > data.dashAttackTime;
+		return IsDashing && Time.time - _dashStartTime > _data.dashAttackTime;
 	}
-    #endregion
-
-   
+    #endregion  
 }

@@ -58,9 +58,6 @@ public class InputHandler : MonoBehaviour
 		//Player Dash
 		controls.Player.Dash.performed += ctx => OnDash(new InputArgs { context = ctx });
 
-		//Player Attack
-		controls.Player.Attack.performed += ctx => Attack();
-		controls.Player.Attack.canceled += ctx => AttackEnd();
 
 		//Player Open Door
 		controls.Player.OpenDoor.performed += ctx => hasOpenedDoor = true;

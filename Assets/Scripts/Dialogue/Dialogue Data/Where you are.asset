@@ -10,10 +10,13 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: bfdbbf443c80da646a15d6cf644d68ea, type: 3}
-  m_Name: Test
+  m_Name: Where you are
   m_EditorClassIdentifier: 
   _dialogue:
-  - hey......... how are you?
+  - You are in a room, duh.
+  - And a very cramped room to say the least. I can barely fit in here.
+  - 'But really though, you are in a room that appears to be a dungeon of some kind. '
+  - Feel free to look around
   _responses:
-  - _responseText: I am fine
-    _dialogueObject: {fileID: 11400000, guid: a7b33ca5c6ac73b4da8eda812b14f652, type: 2}
+  - _responseText: Is that a door?
+    _dialogueObject: {fileID: 11400000, guid: b0a6d87072ebc164d86eda6d35845e80, type: 2}

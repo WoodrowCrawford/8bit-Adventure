@@ -10,8 +10,8 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: bfdbbf443c80da646a15d6cf644d68ea, type: 3}
-  m_Name: Yes
+  m_Name: The Door
   m_EditorClassIdentifier: 
   _dialogue:
-  - yes, that is fine.
+  - Yes that is a door. Press down on the arrow keys to use it. Whatever that means.
   _responses: []

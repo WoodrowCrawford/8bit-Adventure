@@ -1,7 +1,7 @@
 # 8bit-Adventure
 
 ## What this is
-This is a mini tech demo I came up with to learn how to use unity 2d. Things like 2d animation, tilemaps, and a dialogue system is present.
+This is a mini tech demo I came up with to learn how to use unity 2D. Things like 2D animation, tilemaps, and a dialogue system is present.
 
 
 ## How to play

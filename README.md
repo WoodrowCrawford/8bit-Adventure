@@ -15,4 +15,4 @@ Press the tab key to Speed up the text dialogue
 
 Press down on the arrow keys by a door to teleport
 
-### Note: As this is just a tech demo, there are still a few bugs present. Overtime I will work on them and fine tune the mechanics.
+### Note: As this is just a tech demo, there are still a few bugs present.
